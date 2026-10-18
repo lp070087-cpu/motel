@@ -1,0 +1,44 @@
+/* Compact operational finish, scoped to the housekeeping experience. */
+.hk-app .hk-body{max-width:1120px;padding:24px 24px 36px}
+.hk-app .hk-intro{margin-bottom:20px;align-items:center}
+.hk-app .hk-intro h1{font-size:30px;margin:6px 0 8px}
+.hk-app .hk-filter{gap:24px;padding:16px 18px;background:#f7f4ed;border:1px solid #ddd8cd;border-radius:10px;margin-bottom:18px}
+.hk-app .hk-filter h3{font-size:15px;font-weight:500;margin:7px 0}
+.hk-app .hk-filter p{font-size:12px;line-height:1.5;margin:0;color:#73796d}
+.hk-app .hk-status-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.hk-app .hk-status-filters button{display:flex;align-items:center;gap:8px;padding:8px 11px;min-height:38px;border:1px solid #d8d4c9;border-radius:7px;background:#f8f6f0;color:#53604c;font:inherit;font-size:12px;cursor:pointer}
+.hk-app .hk-status-filters button[aria-pressed=true]{background:#536d4b;color:#fff;border-color:#536d4b}
+.hk-app .hk-status-filters b{font-size:11px;font-weight:500;min-width:18px;text-align:center;border-radius:4px;background:#7e8b7020;padding:2px 3px}
+.hk-app .hk-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hk-app .hk-card{padding:14px 16px;min-height:112px;border-radius:10px;box-shadow:none;transform:none;display:flex;flex-direction:column;justify-content:space-between}
+.hk-app .hk-card.active{padding:14px 16px;border:1px solid #526b51;box-shadow:inset 3px 0 #526b51}
+.hk-app .hk-card:hover{transform:none;border-color:#8e9c86}
+.hk-app .hk-card strong{font-size:26px;line-height:1}
+.hk-app .hk-card p{margin:7px 0 0;font-size:13px}
+.hk-app .hk-status{font-size:11px;padding:5px 8px;line-height:1.4;max-width:160px;text-align:center}
+.hk-app .hk-status[data-status=dirty]{background:#f0e5d1;color:#87662d}
+.hk-app .hk-status[data-status=maintenance]{background:#f1dfd5;color:#88573f}
+.hk-app .hk-status[data-status=inspection]{background:#ede5d3;color:#776137}
+.hk-app .hk-detail{padding:22px;border-radius:12px;margin-top:20px}
+.hk-app .hk-detail h3{margin:24px 0 10px}
+.hk-app .bo-check{min-height:44px;padding:10px 0}
+.hk-app .hk-minibar{gap:12px;min-height:58px}
+.hk-app .hk-minibar input{min-width:0;min-height:40px}
+.hk-app .hk-minibar button{min-height:40px}
+.hk-app button:focus-visible{outline:2px solid #526b51;outline-offset:3px}
+@media(max-width:900px){.hk-app .hk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ .hk-app .hk-body{padding:20px 14px 28px}
+ .hk-app .hk-intro{gap:12px;align-items:flex-start}
+ .hk-app .hk-intro h1{font-size:28px}
+ .hk-app .hk-filter{grid-template-columns:1fr;gap:12px;padding:14px}
+ .hk-app .hk-status-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .hk-app .hk-status-filters button{min-height:44px;font-size:11px;padding:8px;justify-content:space-between}
+ .hk-app .hk-grid{grid-template-columns:1fr;gap:9px}
+ .hk-app .hk-card,.hk-app .hk-card.active{min-height:104px;padding:13px 14px}
+ .hk-app .hk-detail{padding:16px}
+ .hk-app .hk-minibar{grid-template-columns:minmax(0,1fr) 58px auto;gap:8px}
+ .hk-app .hk-minibar input,.hk-app .hk-minibar button,.hk-app .hk-primary,.hk-app .hk-back{min-height:44px}
+ .hk-app .hk-minibar button{padding:8px;font-size:11px}
+ .hk-app .hk-minibar>div{min-width:0;overflow-wrap:anywhere;font-size:13px}
+}

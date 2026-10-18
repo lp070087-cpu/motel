@@ -1,0 +1,25 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env*
+
+.next-production/
+
+# Local/private and generated files
+.vercel/
+coverage/
+*.log
+*.log.*
+.cache/
+.tmp/
+playwright-report/
+test-results/
+*.pem
+*.key
+*.p12
+*.pfx
+.DS_Store
+Thumbs.db
+image-inventory.jpg
+editorial-inventory.jpg
