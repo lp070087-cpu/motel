@@ -19,3 +19,8 @@
 .rmap .rmap-label{position:absolute;left:0;top:0;visibility:hidden;pointer-events:auto;display:flex!important;justify-content:center;align-items:center;gap:4px;width:36px!important;min-width:36px!important;max-width:36px!important;height:20px!important;min-height:20px!important;padding:2px 3px!important;border-radius:5px!important;box-sizing:border-box}
 .rmap .rmap-label strong{font-size:11px!important;font-weight:500!important;font-variant-numeric:tabular-nums}
 .rmap .rmap-label i{width:5px;height:5px;box-shadow:0 0 3px var(--suite-status)}
+
+/* Match the viewer to the projected building, in addition to the camera fit. */
+.rmap{container-type:inline-size}
+.rmap .rmap-viewport{height:clamp(480px,calc(100cqw / var(--map-aspect,1.35) + 92px),820px)}
+@media(max-width:620px){.rmap .rmap-viewport{height:clamp(500px,calc(100cqw / var(--map-aspect,1.35) + 92px),620px)}}

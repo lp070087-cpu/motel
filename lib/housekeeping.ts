@@ -3,7 +3,7 @@ import type { MotelState, Role, RoomStatus } from './domain';
 export const housekeepingStatuses = [
  {id:'dirty',label:'Aguardando limpeza'}, {id:'cleaning',label:'Em limpeza'},
  {id:'inspection',label:'Aguardando inspeção'}, {id:'available',label:'Disponível'},
- {id:'maintenance',label:'Manutenção'},
+ {id:'maintenance',label:'Manutenção'}, {id:'occupied',label:'Hospedagens ativas'},
 ] as const;
 export type HousekeepingFilter = 'queue' | typeof housekeepingStatuses[number]['id'];
 export function housekeepingView(state:MotelState,unitId:string,actorId:string,role:Role,filter:HousekeepingFilter) {

@@ -45,7 +45,7 @@ Processos: [Motel+](https://motelmais.com.br/sistema/), [MDE](https://www.mde.co
 
 ## Refinamento visual e mapa 3D
 
-Consulte [REFINEMENT.md](REFINEMENT.md) para recursos, arquivos e limitações. Mapa real procedural em React Three Fiber, controles de câmera, ficha operacional contextual, cards editoriais e páginas completas das suítes. Fotografias locais em public/editorial; créditos em PHOTO_CREDITS.md. Build de produção utiliza .next-production, separado da prévia .next.
+Consulte [REFINEMENT.md](REFINEMENT.md) para recursos, arquivos e limitações. Mapa real procedural em React Three Fiber, controles de câmera, ficha operacional contextual, cards editoriais e páginas completas das suítes. Fotografias locais em public/editorial; créditos em PHOTO_CREDITS.md. Build de produção utiliza .next, conforme a configuração atual de publicação na Vercel.
 
 ## Atualização operacional atual
 
@@ -53,10 +53,16 @@ Consulte [OPERATIONS_UPDATE.md](OPERATIONS_UPDATE.md): 250 suítes, recepção p
 
 ## Importar na Vercel
 
-Importe o repositório GitHub com o preset Next.js, diretório raiz do projeto, instalação `npm ci` e build `npm run build`. Não informe uma pasta de saída manualmente: o Next.js usa o distDir configurado (.next-production). Use Node.js 22. Nenhuma variável de ambiente é necessária para a demonstração. Os arquivos public/ são incluídos no repositório e as fotografias usam next/image; não há dependência de domínio externo de imagens.
+Importe o repositório GitHub com o preset Next.js, diretório raiz do projeto, instalação `npm ci` e build `npm run build`. Não informe uma pasta de saída manualmente: o Next.js usa o distDir configurado (.next). Use Node.js 22. Nenhuma variável de ambiente é necessária para a demonstração. Os arquivos public/ são incluídos no repositório e as fotografias usam next/image; não há dependência de domínio externo de imagens.
 
 A navegação entre experiências e módulos ocorre dentro da rota /. Não há backend compartilhado, autenticação de produção, cobrança real, Neon ou Redis. Dados persistem em localStorage e são compartilhados somente entre abas da mesma origem e perfil de navegador. Cada dispositivo e cada domínio tem sua própria demonstração; a publicação não sincroniza computadores.
 
 ## Finalização
 
 Camareiras: cards compactos, filtros com contadores, cinco estados e proteção das tarefas atribuídas. Fotos: dimensões reais em lib/photo-metadata.json, carregamento responsivo e originais preservados. Consulte FINALIZATION.md para recursos validados e limites da verificação.
+
+## Integração operacional — inspeções, QR e Privilege
+
+Consulte [docs/OPERATIONAL_INTEGRATION.md](docs/OPERATIONAL_INTEGRATION.md). Camareiras têm limpeza e inspeção separadas; a recepção recebe os consumos sem duplicidade. O QR próprio de cada suíte fica na ficha operacional e abre /suite/{roomId}; a ativação exige o código temporário da hospedagem. Cadastro continua opcional. Reservas online com check-in ativo possuem guia de corredores conectado à planta ilustrativa. MOTEL Privilege acumula somente após pagamento elegível e reverte pontos em estornos.
+
+Sincronização reativa entre módulos e abas da mesma origem via BroadcastChannel/storage; não existe sincronização entre dispositivos. A verificação visual do mapa não foi aprovada nesta conversa devido ao bloqueio do navegador automatizado.

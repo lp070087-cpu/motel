@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useSyncExternalStore, type ReactNode } from 'react';
 import { initialState, migrateState, reducer, type Action, type MotelState } from './domain';
-const KEY='motel-demo-v1';
+import {createBrowserRepository,type MotelRepository} from './services/demo-repository';
+let repository:MotelRepository|null=null;
 const seed=initialState();
 let current=seed;
 let initialized=false;
@@ -16,18 +17,22 @@ function valid(value:unknown):value is MotelState {
 function initialize(){
  if(initialized||typeof window==='undefined')return;
  initialized=true;
- try {const raw=localStorage.getItem(KEY);if(raw){const saved:unknown=JSON.parse(raw);if(valid(saved)){current=migrateState(saved);localStorage.setItem(KEY,JSON.stringify(current));}}}catch{ /* The demo remains usable when browser storage is unavailable. */ }
+ try {
+  repository=createBrowserRepository();
+  const saved=repository.load();if(valid(saved))current=migrateState(saved);
+  repository.save(current);
+  repository.subscribe(()=>{try{const saved=repository!.load();const next=valid(saved)?migrateState(saved):initialState();if(JSON.stringify(next)!==JSON.stringify(current)){current=next;emit();}}catch{/* Ignore malformed updates. */}});
+ }catch{/* The demonstration remains usable without persistent storage. */}
  ready=true;emit();
- window.addEventListener('storage',(event)=>{if(event.key!==KEY)return;try{if(event.newValue){const saved:unknown=JSON.parse(event.newValue);if(valid(saved)){current=migrateState(saved);emit();}}else{current=initialState();emit();}}catch{/* Ignore malformed storage from other tabs. */}});
 }
 export interface DispatchResult {ok:boolean;error?:string}
 export function dispatch(action:Action):DispatchResult {
  initialize();
- try {const next=reducer(current,action);if(next===current)return {ok:true};if(typeof window!=='undefined')localStorage.setItem(KEY,JSON.stringify(next));current=next;emit();return {ok:true};}
+ try {const latest=repository?.load();const base=valid(latest)?migrateState(latest):current;const next=reducer(base,action);if(next===base){if(JSON.stringify(base)!==JSON.stringify(current)){current=base;emit();}return {ok:true};}repository?.save(next);current=next;emit();return {ok:true};}
  catch(error){return {ok:false,error:error instanceof Error?error.message:'Não foi possível concluir a operação.'};}
 }
 export function reset():DispatchResult {
- try {const next=initialState();if(typeof window!=='undefined')localStorage.setItem(KEY,JSON.stringify(next));current=next;emit();return {ok:true};}
+ try {const next=initialState();repository?.save(next);current=next;emit();return {ok:true};}
  catch {return {ok:false,error:'O navegador não permitiu salvar a demonstração.'};}
 }
 const subscribe=(listener:()=>void)=>{listeners.add(listener);return()=>{listeners.delete(listener)}};
@@ -38,3 +43,5 @@ export function useMotel(){
  return {state,dispatch,reset,ready:isReady};
 }
 export function MotelProvider({children}:{children:ReactNode}){return children;}
+
+export const demoGateway={execute:dispatch,snapshot:()=>current,subscribe};

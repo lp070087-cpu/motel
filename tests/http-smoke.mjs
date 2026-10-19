@@ -10,6 +10,7 @@ async function walk(dir,prefix=''){
 await walk(new URL('../public/',import.meta.url));
 const failed=[];
 const page=await fetch(base);if(!page.ok)failed.push({path:'/',status:page.status});await page.arrayBuffer();
+const suiteRoutes=[];for(const [path,expected] of [['/suite/u1-r1',200],['/suite/u10-r25',200],['/suite/not-a-room',404]]){const response=await fetch(base+path);suiteRoutes.push({path,status:response.status});if(response.status!==expected)failed.push({path,status:response.status});await response.arrayBuffer();}
 const missing=await fetch(base+'/__motel_missing_check');if(missing.status!==404)failed.push({path:'404',status:missing.status});await missing.arrayBuffer();
 for(let i=0;i<paths.length;i+=4)await Promise.all(paths.slice(i,i+4).map(async(path)=>{
  const response=await fetch(base+path.split('/').map(encodeURIComponent).join('/'));
@@ -22,5 +23,5 @@ for(const src of ['/editorial/interior-8092426.jpg','/images/OIP (3).jpg']){
  if(!response.ok||!response.headers.get('content-type')?.startsWith('image/'))failed.push({path,status:response.status});
  await response.arrayBuffer();
 }
-console.log(JSON.stringify({page:page.status,missingRoute:missing.status,images:paths.length,optimizedImages:2,failures:failed}));
+console.log(JSON.stringify({page:page.status,suiteRoutes,missingRoute:missing.status,images:paths.length,optimizedImages:2,failures:failed}));
 if(failed.length)process.exitCode=1;

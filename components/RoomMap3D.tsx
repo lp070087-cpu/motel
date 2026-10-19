@@ -110,6 +110,8 @@ function Suite({ room, index, layout, selected, faded, onSelect }: { room: Room;
   </group>;
 }
 
+const initialCamera = { position: [26, 32, 29] as [number,number,number], near: .1, far: 700 };
+
 type LabelRefs = React.RefObject<Map<string, HTMLButtonElement>>;
 function CameraRig({ layout, reset, zoom }: { layout: ArchitectureLayout; reset: number; zoom: number }) {
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
@@ -125,6 +127,7 @@ function CameraRig({ layout, reset, zoom }: { layout: ArchitectureLayout; reset:
     target.addScaledVector(screenUp, -frame.offsetY / frame.zoom);
     camera.position.copy(target).addScaledVector(isoDirection, 180);
     camera.lookAt(target);
+    camera.left=-size.width/2;camera.right=size.width/2;camera.top=size.height/2;camera.bottom=-size.height/2;
     camera.zoom = frame.zoom;
     camera.updateProjectionMatrix();
     controls.current?.target.copy(target);
@@ -233,6 +236,7 @@ export default function RoomMap3D(props: Props) {
   const [reset, setReset] = useState(0);
   const [zoom, setZoom] = useState(0);
   const labels = useRef(new Map<string, HTMLButtonElement>());
+  const viewAspect = useMemo(()=>{const layout=architectureLayout(props.unit?.id??props.rooms[0]?.unitId??'u1',props.rooms.length);const frame=mapFrame(layout,1000,1000);return frame.projectedWidth/frame.projectedHeight;},[props.unit?.id,props.rooms.length,props.rooms[0]?.unitId]);
   useEffect(() => {
     try {
       const canvas = document.createElement('canvas');
@@ -246,8 +250,8 @@ export default function RoomMap3D(props: Props) {
   const fallback = <div className="rmap-fallback"><Layers3 size={34} /><h3>Suas suítes, sempre acessíveis</h3><p>O mapa 3D está indisponível neste dispositivo. Selecione uma suíte na lista abaixo para continuar a operação.</p></div>;
   return <section className="rmap" aria-label="Maquete arquitetônica interativa das suítes">
     <div className="rmap-toolbar"><div className="rmap-title"><span className="rmap-live-dot" /><span>MAQUETE INTERATIVA</span><small>Arquitetura ilustrativa</small></div><div className="rmap-tools" role="group" aria-label="Controles do mapa"><span className="rmap-camera-note">Isométrica fixa</span><button type="button" aria-label="Aproximar mapa" disabled={unavailable} onClick={() => setZoom(value => Math.abs(value) + 1)}><Plus size={17} /></button><button type="button" aria-label="Afastar mapa" disabled={unavailable} onClick={() => setZoom(value => -Math.abs(value) - 1)}><Minus size={17} /></button><button type="button" title="Restaurar zoom" aria-label="Restaurar zoom e visão geral" disabled={unavailable} onClick={() => { setReset(value => value + 1); }}><RotateCcw size={16} /></button></div></div>
-    <div className="rmap-viewport">
-      {supported === null ? <div className="rmap-fallback"><Layers3 size={32} /><p>Preparando a maquete…</p></div> : !supported || lost ? fallback : <MapBoundary fallback={fallback} onError={() => setLost(true)}><Canvas orthographic shadows dpr={[1, 1.5]} frameloop="demand" camera={{ position: [26, 32, 29], zoom: 1, near: .1, far: 700 }} gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}><Scene {...props} onSelect={selectRoom} labels={labels} reset={reset} zoom={zoom} onLost={() => setLost(true)} /></Canvas></MapBoundary>}
+    <div className="rmap-viewport" style={{'--map-aspect':viewAspect} as React.CSSProperties}>
+      {supported === null ? <div className="rmap-fallback"><Layers3 size={32} /><p>Preparando a maquete…</p></div> : !supported || lost ? fallback : <MapBoundary fallback={fallback} onError={() => setLost(true)}><Canvas orthographic shadows dpr={[1, 1.5]} frameloop="demand" camera={initialCamera} gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}><Scene {...props} onSelect={selectRoom} labels={labels} reset={reset} zoom={zoom} onLost={() => setLost(true)} /></Canvas></MapBoundary>}
       {!unavailable && <div className="rmap-label-layer">{props.rooms.map(room => <button key={room.id} type="button"
         ref={element => { if (element) labels.current.set(room.id, element); else labels.current.delete(room.id); }}
         className={'rmap-label' + (props.selectedId === room.id ? ' is-selected' : '') + (props.visibleIds && !props.visibleIds.includes(room.id) ? ' is-faded' : '')}
